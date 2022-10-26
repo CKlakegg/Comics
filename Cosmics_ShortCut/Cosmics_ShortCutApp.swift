@@ -11,7 +11,7 @@ import SwiftUI
 struct Cosmics_ShortCutApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ComicView()
         }
     }
 }
