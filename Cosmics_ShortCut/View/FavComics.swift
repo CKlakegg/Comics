@@ -15,7 +15,9 @@ struct FavComics: View{
     
     var body: some View {
         
-        Text("My Favorites")
+        Text("My Favorites Comics")
+        
+        
     }
 
 }

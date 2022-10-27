@@ -12,7 +12,9 @@ struct ComicView: View {
     
     @ObservedObject var viewModel = ComicViewModel()
     
-    @State private var tappedFavButton = UserDefaults.standard.integer(forKey: "Favorite")
+    
+    @State var showAlert: Bool = false
+   
     
     //View with all the content from viewBuilder
     var body: some View {
@@ -25,9 +27,9 @@ struct ComicView: View {
             case .loading:
                 ProgressView()
             case .loaded:
+                showListOfFavoritesButton
                 NavigationView{
                     content
-                    
                         .navigationTitle("Comics")
                 }
                 
@@ -51,7 +53,9 @@ struct ComicView: View {
             comicImage
             text
             date
+            favButton
             navigationButtons
+            showListOfFavoritesButton
           
             
         }
@@ -136,16 +140,24 @@ struct ComicView: View {
     
     @ViewBuilder
     private var favButton: some View {
-        
+        //TODO: Add an actual function for adding to favorites list
         Button {
-            
-            UserDefaults.standard.set(tappedFavButton, forKey: "Favorite")
-            
-            
+            showAlert = true
+            print("Add to list")
         } label: {
-            Image(systemName: "list.star")
+            Image(systemName: "heart")
+                .foregroundColor(Color.red)
         }
-        .padding(.top, 32.0)    }
+        .padding(.top, 32.0)
+        .alert(isPresented: $showAlert) {
+               Alert(
+                   title: Text("Comics is added to favorites"),
+                   message: Text("See all your favorites in comics favorites list")
+                 
+               )
+           }
+        
+    }
     
     @ViewBuilder
     private var searchButton: some View {
@@ -153,6 +165,7 @@ struct ComicView: View {
         Button {
             //action for saving open url Link
             viewModel.didTapSearchLink()
+            print("Open Url")
         } label: {
             Image(systemName: "magnifyingglass")
                 .foregroundColor(Color(.black))
@@ -173,21 +186,7 @@ struct ComicView: View {
         }
         
     }
-    
-    @ViewBuilder
-    private var preview: some View {
-        Button {
-            //action for refreching comic
-            
-        } label: {
-            Image(systemName: "arrow.backward")
-            Text("New Comic")
-        }
-        .foregroundColor(Color(.black))
-        .padding()
-        .clipShape(Capsule())
-    }
-        
+
 }
 
 struct ContentView_Previews: PreviewProvider {

@@ -34,6 +34,22 @@ class ComicViewModel: ObservableObject {
     }
     
     
+    //Saving the comics
+   /* private var favComicList: [number: self.internalComicCounter ] = {
+        return UserDefaults.standard.dictionary(forKey: Constants.SAVED_COMICS_IN_LIST)
+    }() {
+        didSet {
+            storefavComicList()
+        }
+    }
+    private func storefavComicList() {
+        // TODO: replace it with sqlite-storage at some point
+        ComicStorage.standard.set(favComicList, forKey:  Constants.SAVED_COMICS_IN_LIST)
+        // TODO: send update to widget
+    }*/
+    
+    
+    
      //Navigation to Search, open url til browser
     public func didTapSearchLink(){
         //TODO: Make it open a webview in app
