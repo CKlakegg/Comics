@@ -17,8 +17,7 @@ enum ComicsViewModelState {
 
 class ComicViewModel: ObservableObject {
     
-    // Tutorial used: https://youtu.be/bxCDL3kY8XA
-    
+   
     @Published var isFetching: Bool = false
     @Published var comic: Comics? = nil
     @Published var errorMessage = ""
@@ -33,7 +32,7 @@ class ComicViewModel: ObservableObject {
       
     }
     
-    
+    //TODO: finish the storing
     //Saving the comics
    /* private var favComicList: [number: self.internalComicCounter ] = {
         return UserDefaults.standard.dictionary(forKey: Constants.SAVED_COMICS_IN_LIST)
@@ -60,11 +59,14 @@ class ComicViewModel: ObservableObject {
         UIApplication.shared.openURL(url)
     }
     
+    
+    //func for next comic
     func nextComic() async {
         await fetchData(number: self.internalComicCounter)
         internalComicCounter = (internalComicCounter + 1)
     }
     
+    //func for previous comic
     func previousComic() async {
         await fetchData(number: self.internalComicCounter)
         if internalComicCounter > 1 {
@@ -74,16 +76,12 @@ class ComicViewModel: ObservableObject {
     
     func fetchData(number: Int) async {
         
-        let testUrl = URL(string: "https://xkcd.com/\(internalComicCounter)/info.0.json")
-        
-        // let urlString = "https://xkcd.com/614/info.0.json"
-        
-        // guard let url = URL(string: testUrl) else { return }
+        let urlString = URL(string: "https://xkcd.com/\(internalComicCounter)/info.0.json")
         
         do {
             isFetching = true
             
-            let (data, response) = try await URLSession.shared.data(from: testUrl!)
+            let (data, response) = try await URLSession.shared.data(from: urlString!)
             
             self.comic = try JSONDecoder().decode(Comics.self, from: data)
              self.state = .loaded

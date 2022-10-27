@@ -7,7 +7,7 @@
 
 import Foundation
 
-// Service used for fetching and parsing the comics from the API.
+// Service used for fetching and parsing the comics from the API
 struct DataService {
     
     // Method used to fetch the comic.

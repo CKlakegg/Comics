@@ -43,7 +43,7 @@ struct ComicView: View {
     }
     
     
-    //MARK: ViewBuilder for contentView
+    //MARK: ViewBuilder for comicsView
     
     //Viewbulider with all the athoer viewbulider inside
     @ViewBuilder
@@ -118,8 +118,6 @@ struct ComicView: View {
         Text(viewModel.comic?.alt ?? "")
             .padding(20)
         
-        
-        
     }
     
     @ViewBuilder
@@ -130,14 +128,12 @@ struct ComicView: View {
     
     @ViewBuilder
     private var showListOfFavoritesButton: some View {
-        
         NavigationLink(destination: FavComics()) {
             Image(systemName: "list.star")
                 .foregroundColor(Color(.black))
             
         }
     }
-    
     @ViewBuilder
     private var favButton: some View {
         //TODO: Add an actual function for adding to favorites list
