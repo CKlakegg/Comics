@@ -129,7 +129,7 @@ struct ComicView: View {
     @ViewBuilder
     private var showListOfFavoritesButton: some View {
         NavigationLink(destination: FavComics()) {
-            Image(systemName: "list.star")
+            Text("Your Favorites")
                 .foregroundColor(Color(.black))
             
         }
