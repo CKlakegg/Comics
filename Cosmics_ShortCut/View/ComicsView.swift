@@ -10,75 +10,86 @@ import SwiftUI
 
 struct ComicView: View {
     
-    
-    
-
-    
     @ObservedObject var viewModel = ComicViewModel()
-      
+    
+    @State private var tappedFavButton = UserDefaults.standard.integer(forKey: "Favorite")
+    
+    //View with all the content from viewBuilder
     var body: some View {
-        //ContentView with all viewBuilder
-        NavigationView{
-            VStack() {
-                // If the state in the viewModel is fetching, we show a progress view.
-                if viewModel.isFetching {
-                    ProgressView()
-                }
-                HStack(spacing: 50){
-                    titleOfComic
+        
+        ZStack{
+            //State in the loading of the view
+            switch viewModel.state{
+            case .idle:
+                ProgressView()
+            case .loading:
+                ProgressView()
+            case .loaded:
+                NavigationView{
+                    content
                     
-                    Button {
-                        //action for saving comic
-                        UserDefaults.standard.set(true, forKey: "Key")
-                       
-                    } label: {
-                        Image(systemName: "heart")
-                            .foregroundColor(Color(.red))
-                    }
-
+                        .navigationTitle("Comics")
                 }
-                comicImage
-                date
-               
-                
                 
             }
-                .navigationTitle("Comics")
-                .toolbar {
-                    ToolbarItemGroup(placement: .bottomBar) {
-                        Button {
-                            //action for show prev comic
-                           
-                        } label: {
-                            Image(systemName: "arrow.backward")
-                                .foregroundColor(Color(.black))
-                            Text("Previous")
-                                .foregroundColor(Color(.black))
-                        }
-
-                        Spacer()
-                        Button {
-                            //action for refreching comic
-                            UserDefaults.standard.bool(forKey: "Key")
-                            
-                        } label: {
-                            Text("Next")
-                                .foregroundColor(Color(.black))
-                            Image(systemName: "arrow.forward")
-                              .foregroundColor(Color(.black))
-                        }
-
-                    }
-                }
-         
-            }
-          .task {
-            await viewModel.fetchData()
+        }.task {
+            await viewModel.fetchData(number: 1)
         }
+        
+        
+        
     }
     
     
     //MARK: ViewBuilder for contentView
+    
+    //Viewbulider with all the athoer viewbulider inside
+    @ViewBuilder
+    private var content: some View {
+        VStack(spacing: 20){
+            titleOfComic
+            comicImage
+            text
+            date
+            navigationButtons
+          
+            
+        }
+    }
+    
+    @ViewBuilder
+    private var navigationButtons: some View {
+        //TODO: Make buttons stay put in view when it is updating
+        HStack {
+            Button(
+                action: {
+                    Task {
+                        await viewModel.previousComic()
+                    }
+                },
+                label: {
+                    Image(systemName: "arrow.backward")
+                        .foregroundColor(Color(.black))
+                    Text("Previous")
+                        .foregroundColor(Color(.black))
+                }
+            )
+            Button(
+                action: {
+                    Task {
+                        await viewModel.nextComic()
+                    }
+                },
+                label: {
+                    Text("Next")
+                        .foregroundColor(Color(.black))
+                    Image(systemName: "arrow.forward")
+                        .foregroundColor(Color(.black))
+                }
+            )
+        }
+    }
+    
     @ViewBuilder
     private var comicImage: some View {
         // If the published comic from the viewmodel is not null,
@@ -99,13 +110,59 @@ struct ComicView: View {
     }
     
     @ViewBuilder
+    private var text: some View {
+        Text(viewModel.comic?.alt ?? "")
+            .padding(20)
+        
+        
+        
+    }
+    
+    @ViewBuilder
     private var titleOfComic: some View {
         Text(viewModel.comic?.title ?? "")
             .bold()
     }
     
     @ViewBuilder
+    private var showListOfFavoritesButton: some View {
+        
+        NavigationLink(destination: FavComics()) {
+            Image(systemName: "list.star")
+                .foregroundColor(Color(.black))
+            
+        }
+    }
+    
+    @ViewBuilder
+    private var favButton: some View {
+        
+        Button {
+            
+            UserDefaults.standard.set(tappedFavButton, forKey: "Favorite")
+            
+            
+        } label: {
+            Image(systemName: "list.star")
+        }
+        .padding(.top, 32.0)    }
+    
+    @ViewBuilder
+    private var searchButton: some View {
+        //TODO: Use webview insted so i can open in the application
+        Button {
+            //action for saving open url Link
+            viewModel.didTapSearchLink()
+        } label: {
+            Image(systemName: "magnifyingglass")
+                .foregroundColor(Color(.black))
+        }
+    }
+    
+    
+    @ViewBuilder
     private var date: some View {
+        //TODO: Make date update when changing comics
         HStack{
             Text(viewModel.comic?.day ?? "")
             Text("/")
@@ -121,7 +178,7 @@ struct ComicView: View {
     private var preview: some View {
         Button {
             //action for refreching comic
-           
+            
         } label: {
             Image(systemName: "arrow.backward")
             Text("New Comic")
@@ -130,6 +187,7 @@ struct ComicView: View {
         .padding()
         .clipShape(Capsule())
     }
+        
 }
 
 struct ContentView_Previews: PreviewProvider {

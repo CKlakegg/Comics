@@ -27,7 +27,7 @@ import Foundation
 
 //DummyData
 extension Comics {
-    static var dummyClient: Comics? {
+    static var dummyComics: Comics? {
         let dummyComicsString = """
         {"month": "10",
         "num": 2689,
