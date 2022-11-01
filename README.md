@@ -4,7 +4,7 @@ Code Challenge
 The project architecture is MVVM. 
 
 
-If I had had more time I would have pro-rotated to finish:
+If I had had more time I would have prorated to finish:
 
 
 -Add comics to the favorites list and make this available offline too with the use of UserDefaults 
